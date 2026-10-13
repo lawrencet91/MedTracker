@@ -7,7 +7,6 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="每日药盒">
 <meta name="theme-color" content="#0D6A55">
-<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>每日药盒 Daily Pillbox</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,6 +27,8 @@
   --danger: #B3261E;
   --font-sc: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
   --font-tc: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --tabs-h: 68px;
+  padding-top: env(safe-area-inset-top, 0px);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -41,15 +42,16 @@
   --accent: #43B898; --accent-ink: #05221B; --done-bg: #17302A; --due: #F2A468; --due-bg: #3A2616;
   --danger: #FF8A80; color-scheme: dark;
 }
+[hidden] { display: none !important; }
 html, body { background: var(--bg); color: var(--ink); }
-body { font-family: var(--font-sc); font-size: 20px; line-height: 1.45; }
+body { margin: 0; font-family: var(--font-sc); font-size: 20px; line-height: 1.45; }
 body.zht { font-family: var(--font-tc); }
 * { box-sizing: border-box; }
 button, input, select { font: inherit; color: inherit; }
 button { cursor: pointer; }
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
-.wrap { max-width: 560px; margin: 0 auto; padding-inline: 16px; padding-block: 16px 120px; display: flex; flex-direction: column; gap: 16px; }
+.wrap { max-width: 560px; margin: 0 auto; padding-inline: 16px; padding-block: 16px calc(var(--tabs-h) + 56px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 14px; }
 
 .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
 .date { font-size: 28px; font-weight: 700; line-height: 1.2; text-wrap: balance; }
@@ -59,163 +61,265 @@ button { cursor: pointer; }
 
 .progress { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
 .progress strong { font-size: 24px; }
-.bar { display: flex; gap: 6px; }
+.bar { display: flex; gap: 4px; }
 .bar span { flex: 1; height: 14px; border-radius: 7px; background: var(--line); }
 .bar span.on { background: var(--accent); }
 .progress.complete { background: var(--done-bg); border-color: var(--accent); }
 
-.note { font-size: 16px; color: var(--muted); background: var(--surface); border: 1px dashed var(--line); border-radius: 12px; padding: 10px 14px; }
+.note { font-size: 16px; color: var(--muted); background: var(--surface); border: 1px dashed var(--line); border-radius: 12px; padding: 10px 14px; display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
 
-.card { background: var(--surface); border: 2px solid var(--line); border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+.card { background: var(--surface); border: 2px solid var(--line); border-radius: 18px; padding: 14px 16px; }
 .card.due { border-color: var(--due); }
 .card.done { background: var(--done-bg); border-color: transparent; }
-.card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
-.card-head > div { min-width: 0; }
-.card h2 { margin: 0; font-size: 26px; line-height: 1.25; }
-.when { font-size: 17px; color: var(--muted); }
-.badge { flex: none; font-size: 16px; font-weight: 700; padding: 4px 12px; border-radius: 999px; background: var(--due-bg); color: var(--due); }
-.badge.ok { background: var(--accent); color: var(--accent-ink); }
-.pills { display: flex; flex-wrap: wrap; gap: 6px; }
-.pill { width: 34px; height: 16px; border-radius: 8px; border: 1px solid rgba(0,0,0,.25); flex: none; display: inline-block; }
-.big { width: 100%; min-height: 72px; border: 0; border-radius: 16px; background: var(--accent); color: var(--accent-ink); font-size: 26px; font-weight: 700; padding: 10px 16px; }
-.big:active { transform: scale(.98); }
-.link { background: none; border: 0; color: var(--accent); font-size: 18px; text-decoration: underline; padding: 6px 0; text-align: left; min-height: 44px; }
-.done-line { font-size: 22px; font-weight: 700; color: var(--accent); }
+.entry { display: flex; align-items: center; gap: 12px; }
+.entry .txt { flex: 1; min-width: 0; }
+.entry h2, .group h2 { margin: 0; font-size: 24px; line-height: 1.25; overflow-wrap: anywhere; }
+.when { font-size: 16px; color: var(--muted); overflow-wrap: anywhere; }
+.badge { display: inline-block; font-size: 15px; font-weight: 700; padding: 2px 10px; border-radius: 999px; background: var(--due-bg); color: var(--due); margin-top: 4px; }
+.pill { width: 30px; height: 15px; border-radius: 8px; border: 1px solid rgba(0,0,0,.3); flex: none; display: inline-block; }
+.entry > .pill { width: 36px; height: 18px; border-radius: 9px; }
+.tick { flex: none; min-height: 64px; min-width: 104px; border: 0; border-radius: 14px; background: var(--accent); color: var(--accent-ink); font-size: 22px; font-weight: 700; padding: 6px 14px; }
+.tick:active, .big:active { transform: scale(.97); }
+.taken { flex: none; text-align: right; font-size: 19px; color: var(--accent); font-weight: 700; display: flex; flex-direction: column; align-items: flex-end; font-variant-numeric: tabular-nums; }
+.link { background: none; border: 0; color: var(--accent); font-size: 17px; text-decoration: underline; padding: 4px 0; min-height: 40px; font-weight: 400; }
 
-.items { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
-.item { display: flex; align-items: center; gap: 12px; padding-block: 12px; border-bottom: 1px solid var(--line); }
-.item .name { flex: 1; min-width: 0; font-size: 22px; }
-.item .take { min-height: 52px; min-width: 96px; border-radius: 12px; border: 2px solid var(--accent); background: var(--surface); color: var(--accent); font-weight: 700; font-size: 20px; }
-.item .taken { text-align: right; font-size: 18px; color: var(--accent); font-weight: 700; display: flex; flex-direction: column; align-items: flex-end; }
-.item .taken .link { font-size: 16px; font-weight: 400; padding: 0; min-height: 32px; }
+.group { display: flex; flex-direction: column; gap: 6px; }
+.group-items { display: flex; flex-direction: column; }
+.group-items .entry { padding-block: 10px; border-top: 1px solid var(--line); }
+.group-items h2 { font-size: 21px; }
+.group-items .tick { min-height: 56px; min-width: 92px; font-size: 20px; }
+.big { width: 100%; min-height: 64px; border: 2px solid var(--accent); border-radius: 14px; background: var(--surface); color: var(--accent); font-size: 22px; font-weight: 700; padding: 8px 16px; margin-top: 6px; }
 
 .tabs { position: fixed; left: 0; right: 0; bottom: 0; background: var(--surface); border-top: 1px solid var(--line); display: flex; justify-content: center; padding-bottom: env(safe-area-inset-bottom, 0px); z-index: 5; }
 .tabs div { display: flex; width: 100%; max-width: 560px; }
-.tabs button { flex: 1; border: 0; background: none; min-height: 68px; font-size: 20px; color: var(--muted); border-top: 4px solid transparent; }
+.tabs button { flex: 1; border: 0; background: none; min-height: var(--tabs-h); font-size: 20px; color: var(--muted); border-top: 4px solid transparent; }
 .tabs button[aria-current="page"] { color: var(--accent); font-weight: 700; border-top-color: var(--accent); }
 
-.day { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.day { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
 .day-head { display: flex; justify-content: space-between; gap: 12px; font-weight: 700; }
 .row { display: flex; justify-content: space-between; gap: 12px; font-size: 18px; }
-.row span:first-child { min-width: 0; }
+.row span:first-child { min-width: 0; overflow-wrap: anywhere; }
 .row .t { font-variant-numeric: tabular-nums; color: var(--accent); white-space: nowrap; }
 .row .miss { color: var(--muted); white-space: nowrap; }
-.row.grp { font-weight: 700; margin-top: 4px; }
+.row.grp { font-weight: 700; margin-top: 4px; color: var(--muted); font-size: 16px; }
 
-.setup-list { display: flex; flex-direction: column; gap: 10px; }
-.setup-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px 16px; }
-.setup-row > div { min-width: 0; }
+h1.sec { margin: 0; font-size: 26px; }
+h2.sub { margin: 10px 0 0; font-size: 21px; }
+.hint { font-size: 16px; color: var(--muted); margin: 0; }
+.setup-list { display: flex; flex-direction: column; gap: 8px; }
+.setup-row { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 10px 14px; }
+.setup-row .txt { flex: 1; min-width: 0; }
+.setup-row strong { overflow-wrap: anywhere; }
 .btn { min-height: 52px; padding: 8px 18px; border-radius: 12px; border: 2px solid var(--accent); background: var(--surface); color: var(--accent); font-weight: 700; }
 .btn.solid { background: var(--accent); color: var(--accent-ink); }
 .btn.danger { border-color: var(--danger); color: var(--danger); }
+.btn.small { min-height: 44px; padding: 4px 14px; font-size: 17px; }
+
 .form { display: flex; flex-direction: column; gap: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px; }
+.form-title { display: flex; align-items: center; gap: 12px; font-size: 24px; font-weight: 700; overflow-wrap: anywhere; }
 .field { display: flex; flex-direction: column; gap: 6px; }
 .field > label, .field > .lbl { font-weight: 700; font-size: 18px; }
-.field input[type=text], .field input[type=time], .field select { min-height: 52px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); width: 100%; }
+.field input[type=text], .field input[type=time], .field select, .search { min-height: 52px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); width: 100%; }
 .days { display: flex; flex-wrap: wrap; gap: 6px; }
 .days button { min-width: 48px; min-height: 48px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); }
 .days button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 700; }
-.pill-edit { display: flex; flex-direction: column; gap: 8px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; }
-.pill-edit .r { display: flex; gap: 8px; align-items: center; }
-.pill-edit input { flex: 1; min-width: 0; }
-.swatches { display: flex; flex-wrap: wrap; gap: 6px; }
-.swatches button { width: 44px; height: 36px; border-radius: 18px; border: 1px solid rgba(0,0,0,.3); padding: 0; }
+.swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+.swatches button { width: 48px; height: 36px; border-radius: 18px; border: 1px solid rgba(0,0,0,.3); padding: 0; }
 .swatches button[aria-pressed="true"] { outline: 3px solid var(--accent); outline-offset: 2px; }
-.x { min-width: 48px; min-height: 48px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--danger); font-size: 22px; }
+.checks { display: flex; flex-direction: column; }
+.checks label { display: flex; align-items: center; gap: 12px; min-height: 56px; border-bottom: 1px solid var(--line); font-size: 20px; }
+.checks input { width: 26px; height: 26px; accent-color: var(--accent); flex: none; }
+.checks .other { font-size: 15px; color: var(--muted); }
 .actions { display: flex; gap: 10px; flex-wrap: wrap; }
 .actions .btn { flex: 1; }
 
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { min-height: 52px; padding: 6px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); display: inline-flex; align-items: center; gap: 8px; font-size: 19px; }
+.chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 700; }
+.chip:disabled { opacity: .55; cursor: default; }
+.custom-row { display: flex; gap: 8px; }
+.custom-row input { flex: 1; min-width: 0; }
+.pick-bar { position: fixed; left: 0; right: 0; bottom: calc(var(--tabs-h) + env(safe-area-inset-bottom, 0px)); background: var(--surface); border-top: 1px solid var(--line); padding: 10px 16px; display: flex; justify-content: center; z-index: 6; }
+.pick-bar .actions { width: 100%; max-width: 528px; }
+
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 10; }
 .sheet { background: var(--surface); border-radius: 20px; padding: 22px; max-width: 440px; width: 100%; display: flex; flex-direction: column; gap: 18px; font-size: 22px; }
-.toast { position: fixed; left: 50%; bottom: calc(84px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 12px 22px; border-radius: 999px; font-weight: 700; z-index: 8; max-width: calc(100% - 32px); text-align: center; }
-h1.sec { margin: 0; font-size: 26px; }
+.toast { position: fixed; left: 50%; bottom: calc(var(--tabs-h) + 16px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 12px 22px; border-radius: 999px; font-weight: 700; z-index: 8; max-width: calc(100% - 32px); text-align: center; }
 p { margin: 0; }
-@media (prefers-reduced-motion: reduce) { .big:active { transform: none; } }
+@media (prefers-reduced-motion: reduce) { .tick:active, .big:active { transform: none; } }
 </style>
 </head>
 <body>
-
 <div class="wrap" id="app"></div>
+<div class="pick-bar" id="pickbar" hidden></div>
 <nav class="tabs"><div id="tabs"></div></nav>
 <div class="modal" id="modal" hidden><div class="sheet" role="dialog" aria-modal="true"><p id="modal-text"></p><div class="actions"><button class="btn" id="modal-no"></button><button class="btn solid" id="modal-yes"></button></div></div></div>
 <div class="toast" id="toast" hidden></div>
 
 <script>
 const T = {
-  zhs: { name:'每日药盒', today:'今天', history:'记录', setup:'设置', progress:'已完成 {a} / {b}', allDone:'今天全部吃完了 ✅',
-    tookAll:'全部吃了（{n}种）', took:'吃了', takenAt:'✅ {t} 已吃', partial:'已吃 {a}/{b}', choose:'只吃了一部分？点这里选择', hide:'收起',
-    undo:'撤销', due:'该吃了', any:'随时', breakfast:'早餐时', lunch:'午餐时', dinner:'晚餐时', bed:'睡前', at:'{t}',
+  zhs: { today:'今天', history:'记录', setup:'设置', progress:'已吃 {a} / {b}', allDone:'今天全部吃完了 ✅',
+    tookAll:'全部吃了（{n}种）', took:'吃了', undo:'撤销', due:'该吃了',
+    any:'随时', breakfast:'早餐时', lunch:'午餐时', dinner:'晚餐时', bed:'睡前', at:'{t}',
     undoQ:'撤销「{n}」的记录吗？', no:'取消', yes:'撤销', recorded:'已记录 {t}', notTaken:'未吃', nothing:'今天没有要吃的药',
-    sample:'这些是示例。请家人在「设置」里改成实际的药。', setupIntro:'由家人设置。爸妈只需要用「今天」页面。', add:'＋ 新增',
-    edit:'修改', fName:'名称（例如：早餐维生素）', fWhen:'什么时候吃', fTime:'时间', fDays:'哪几天吃', every:'每天', fPills:'这一组的药',
-    pillName:'药名', addPill:'＋ 加一种药', save:'保存', cancel:'取消', del:'删除', delQ:'删除「{n}」？', delYes:'删除',
-    wd:['日','一','二','三','四','五','六'], newName:'新的一组', needName:'请填写名称和至少一种药', last7:'最近 7 天', noSave:'这个浏览器无法保存记录。' },
-  zht: { name:'每日藥盒', today:'今天', history:'記錄', setup:'設定', progress:'已完成 {a} / {b}', allDone:'今天全部吃完了 ✅',
-    tookAll:'全部吃了（{n}種）', took:'吃了', takenAt:'✅ {t} 已吃', partial:'已吃 {a}/{b}', choose:'只吃了一部分？點這裡選擇', hide:'收起',
-    undo:'撤銷', due:'該吃了', any:'隨時', breakfast:'早餐時', lunch:'午餐時', dinner:'晚餐時', bed:'睡前', at:'{t}',
+    sample:'这些是示例。请家人在「设置」里选择实际吃的药。', setupIntro:'由家人设置。爸妈只需要用「今天」页面。',
+    myMeds:'我的药和保健品', addMeds:'＋ 添加药或保健品', edit:'修改', emptyMine:'还没有添加任何药。',
+    groupsTitle:'组合（可选）', groupsHint:'把一起吃的药放在同一组，就可以一次全部打勾。', addGroup:'＋ 新建组合', noGroups:'还没有组合。',
+    inGroup:'组合：{n}', clearSample:'清除示例', sampleSetup:'现在显示的是示例。添加第一项时，示例会自动清除。',
+    pickTitle:'选择要吃的药或保健品', search:'搜索…', supp:'保健品', med:'药物', have:'已添加',
+    customLbl:'找不到？自己输入', customAdd:'加入', addN:'添加 {n} 项',
+    fWhen:'什么时候吃', fTime:'时间', fDays:'哪几天吃', every:'每天', fNote:'备注（可选）', notePh:'例如：半粒、5mg、饭后',
+    fColor:'药丸颜色', fGroup:'组合', noGroup:'不分组', fName:'名称', fMembers:'这个组合里的药', groupPh:'例如：早餐一起吃',
+    groupTiming:'时间跟随组合「{n}」', save:'保存', cancel:'取消', del:'删除', delQ:'删除「{n}」？', delYes:'删除',
+    wd:['日','一','二','三','四','五','六'], needName:'请填写名称', last7:'最近 7 天', noSave:'这个浏览器无法保存记录。' },
+  zht: { today:'今天', history:'記錄', setup:'設定', progress:'已吃 {a} / {b}', allDone:'今天全部吃完了 ✅',
+    tookAll:'全部吃了（{n}種）', took:'吃了', undo:'撤銷', due:'該吃了',
+    any:'隨時', breakfast:'早餐時', lunch:'午餐時', dinner:'晚餐時', bed:'睡前', at:'{t}',
     undoQ:'撤銷「{n}」的記錄嗎？', no:'取消', yes:'撤銷', recorded:'已記錄 {t}', notTaken:'未吃', nothing:'今天沒有要吃的藥',
-    sample:'這些是示例。請家人在「設定」裡改成實際的藥。', setupIntro:'由家人設定。爸媽只需要用「今天」頁面。', add:'＋ 新增',
-    edit:'修改', fName:'名稱（例如：早餐維生素）', fWhen:'什麼時候吃', fTime:'時間', fDays:'哪幾天吃', every:'每天', fPills:'這一組的藥',
-    pillName:'藥名', addPill:'＋ 加一種藥', save:'儲存', cancel:'取消', del:'刪除', delQ:'刪除「{n}」？', delYes:'刪除',
-    wd:['日','一','二','三','四','五','六'], newName:'新的一組', needName:'請填寫名稱和至少一種藥', last7:'最近 7 天', noSave:'這個瀏覽器無法儲存記錄。' },
-  en: { name:'Daily Pillbox', today:'Today', history:'History', setup:'Setup', progress:'{a} of {b} done', allDone:'All done for today ✅',
-    tookAll:'Took all {n}', took:'Took it', takenAt:'✅ Taken {t}', partial:'{a} of {b} taken', choose:'Took only some? Tap to choose', hide:'Close',
-    undo:'Undo', due:'Due now', any:'Anytime', breakfast:'With breakfast', lunch:'With lunch', dinner:'With dinner', bed:'Before bed', at:'At {t}',
+    sample:'這些是示例。請家人在「設定」裡選擇實際吃的藥。', setupIntro:'由家人設定。爸媽只需要用「今天」頁面。',
+    myMeds:'我的藥和保健品', addMeds:'＋ 新增藥或保健品', edit:'修改', emptyMine:'還沒有新增任何藥。',
+    groupsTitle:'組合（可選）', groupsHint:'把一起吃的藥放在同一組，就可以一次全部打勾。', addGroup:'＋ 新建組合', noGroups:'還沒有組合。',
+    inGroup:'組合：{n}', clearSample:'清除示例', sampleSetup:'現在顯示的是示例。新增第一項時，示例會自動清除。',
+    pickTitle:'選擇要吃的藥或保健品', search:'搜尋…', supp:'保健品', med:'藥物', have:'已新增',
+    customLbl:'找不到？自己輸入', customAdd:'加入', addN:'新增 {n} 項',
+    fWhen:'什麼時候吃', fTime:'時間', fDays:'哪幾天吃', every:'每天', fNote:'備註（可選）', notePh:'例如：半粒、5mg、飯後',
+    fColor:'藥丸顏色', fGroup:'組合', noGroup:'不分組', fName:'名稱', fMembers:'這個組合裡的藥', groupPh:'例如：早餐一起吃',
+    groupTiming:'時間跟隨組合「{n}」', save:'儲存', cancel:'取消', del:'刪除', delQ:'刪除「{n}」？', delYes:'刪除',
+    wd:['日','一','二','三','四','五','六'], needName:'請填寫名稱', last7:'最近 7 天', noSave:'這個瀏覽器無法儲存記錄。' },
+  en: { today:'Today', history:'History', setup:'Setup', progress:'{a} of {b} taken', allDone:'All done for today ✅',
+    tookAll:'Took all {n}', took:'Took it', undo:'Undo', due:'Due now',
+    any:'Anytime', breakfast:'With breakfast', lunch:'With lunch', dinner:'With dinner', bed:'Before bed', at:'At {t}',
     undoQ:'Remove the record for "{n}"?', no:'Cancel', yes:'Remove', recorded:'Recorded at {t}', notTaken:'Not taken', nothing:'Nothing to take today',
-    sample:'These are examples. Family can change them to the real pills in Setup.', setupIntro:'Set up by family. Parents only need the Today tab.', add:'+ Add',
-    edit:'Edit', fName:'Name (e.g. Breakfast vitamins)', fWhen:'When to take', fTime:'Time', fDays:'Which days', every:'Every day', fPills:'Pills in this group',
-    pillName:'Pill name', addPill:'+ Add a pill', save:'Save', cancel:'Cancel', del:'Delete', delQ:'Delete "{n}"?', delYes:'Delete',
-    wd:['Su','Mo','Tu','We','Th','Fr','Sa'], newName:'New group', needName:'Add a name and at least one pill', last7:'Last 7 days', noSave:'This browser cannot save records.' }
+    sample:'These are examples. Family can pick the real ones in Setup.', setupIntro:'Set up by family. Parents only need the Today tab.',
+    myMeds:'Medicines and supplements', addMeds:'+ Add medicine or supplement', edit:'Edit', emptyMine:'Nothing added yet.',
+    groupsTitle:'Groups (optional)', groupsHint:'Put pills taken together in a group to tick them all at once.', addGroup:'+ New group', noGroups:'No groups yet.',
+    inGroup:'Group: {n}', clearSample:'Clear examples', sampleSetup:'These are examples. They are removed when you add your first item.',
+    pickTitle:'Choose medicines or supplements', search:'Search…', supp:'Supplements', med:'Medicines', have:'Added',
+    customLbl:'Not listed? Type it in', customAdd:'Add', addN:'Add {n}',
+    fWhen:'When to take', fTime:'Time', fDays:'Which days', every:'Every day', fNote:'Note (optional)', notePh:'e.g. half tablet, 5mg, after food',
+    fColor:'Pill colour', fGroup:'Group', noGroup:'No group', fName:'Name', fMembers:'Pills in this group', groupPh:'e.g. Breakfast pills',
+    groupTiming:'Timing follows the group "{n}"', save:'Save', cancel:'Cancel', del:'Delete', delQ:'Delete "{n}"?', delYes:'Delete',
+    wd:['Su','Mo','Tu','We','Th','Fr','Sa'], needName:'Please enter a name', last7:'Last 7 days', noSave:'This browser cannot save records.' }
 };
+
+const C = { white:'#FFFFFF', yellow:'#F7D84A', orange:'#F29A3A', red:'#D9483B', pink:'#F2A7C3', blue:'#5B8DEF', green:'#6CC17A', brown:'#8A5A3B' };
+const COLORS = Object.values(C);
+// [key, colour, 简体, 繁體, English]
+const CATALOG = {
+  supp: [
+    ['vitd', C.yellow, '维生素D', '維他命D', 'Vitamin D'],
+    ['vitc', C.orange, '维生素C', '維他命C', 'Vitamin C'],
+    ['vitb', C.red, '维生素B族', '維他命B群', 'Vitamin B complex'],
+    ['b12', C.pink, '维生素B12', '維他命B12', 'Vitamin B12'],
+    ['vite', C.orange, '维生素E', '維他命E', 'Vitamin E'],
+    ['multi', C.brown, '复合维生素', '綜合維他命', 'Multivitamin'],
+    ['calcium', C.white, '钙片', '鈣片', 'Calcium'],
+    ['magnesium', C.white, '镁', '鎂', 'Magnesium'],
+    ['iron', C.red, '铁', '鐵', 'Iron'],
+    ['zinc', C.white, '锌', '鋅', 'Zinc'],
+    ['fishoil', C.orange, '鱼油', '魚油', 'Fish oil (Omega-3)'],
+    ['glucosamine', C.white, '葡萄糖胺', '葡萄糖胺', 'Glucosamine'],
+    ['probiotic', C.white, '益生菌', '益生菌', 'Probiotic'],
+    ['coq10', C.orange, '辅酶Q10', '輔酶Q10', 'CoQ10'],
+    ['lutein', C.orange, '叶黄素', '葉黃素', 'Lutein'],
+    ['folic', C.yellow, '叶酸', '葉酸', 'Folic acid'],
+    ['collagen', C.white, '胶原蛋白', '膠原蛋白', 'Collagen'],
+    ['lecithin', C.yellow, '卵磷脂', '卵磷脂', 'Lecithin'],
+    ['turmeric', C.yellow, '姜黄', '薑黃', 'Turmeric']
+  ],
+  med: [
+    ['bp', C.white, '降血压药', '降血壓藥', 'Blood pressure'],
+    ['chol', C.white, '降胆固醇药', '降膽固醇藥', 'Cholesterol'],
+    ['sugar', C.white, '降血糖药', '降血糖藥', 'Diabetes (blood sugar)'],
+    ['aspirin', C.white, '阿司匹林', '阿斯匹靈', 'Aspirin'],
+    ['thinner', C.pink, '抗凝血药', '抗凝血藥', 'Blood thinner'],
+    ['heart', C.white, '心脏药', '心臟藥', 'Heart'],
+    ['thyroid', C.white, '甲状腺药', '甲狀腺藥', 'Thyroid'],
+    ['stomach', C.white, '胃药', '胃藥', 'Stomach / acid'],
+    ['pain', C.white, '止痛药', '止痛藥', 'Pain relief'],
+    ['arthritis', C.white, '关节炎药', '關節炎藥', 'Arthritis'],
+    ['gout', C.white, '痛风药', '痛風藥', 'Gout'],
+    ['prostate', C.white, '前列腺药', '攝護腺藥', 'Prostate'],
+    ['bone', C.white, '骨质疏松药', '骨質疏鬆藥', 'Osteoporosis'],
+    ['diuretic', C.white, '利尿药', '利尿藥', 'Water pill (diuretic)'],
+    ['allergy', C.white, '抗过敏药', '抗過敏藥', 'Allergy'],
+    ['sleep', C.white, '安眠药', '安眠藥', 'Sleep'],
+    ['antibiotic', C.white, '抗生素', '抗生素', 'Antibiotic']
+  ]
+};
+const CAT = {};
+for (const type in CATALOG) for (const [key, color, zhs, zht, en] of CATALOG[type]) CAT[key] = { type, color, n: { zhs, zht, en } };
+
 const LOC = { zhs:'zh-CN', zht:'zh-TW', en:'en-US' };
-const COLORS = ['#FFFFFF','#F7D84A','#F29A3A','#D9483B','#F2A7C3','#5B8DEF','#6CC17A','#8A5A3B'];
 const WHEN = ['any','breakfast','lunch','dinner','bed','time'];
 const ORDER = { breakfast:480, lunch:720, dinner:1080, bed:1320, any:1400 };
 const KEY = 'pillbox.v1';
 
 const uid = () => Math.random().toString(36).slice(2, 10);
-function sample(lang) {
-  const n = {
-    zhs: ['早餐维生素','维生素D','钙片','鱼油','维生素C','降血压药','睡前','益生菌','镁片'],
-    zht: ['早餐維生素','維生素D','鈣片','魚油','維生素C','降血壓藥','睡前','益生菌','鎂片'],
-    en:  ['Breakfast vitamins','Vitamin D','Calcium','Fish oil','Vitamin C','Blood pressure','Bedtime','Probiotic','Magnesium']
-  }[lang];
-  return [
-    { id: uid(), name: n[5], when: 'time', time: '08:00', days: [], items: [{ id: uid(), name: n[5], color: COLORS[0] }] },
-    { id: uid(), name: n[0], when: 'breakfast', time: '08:00', days: [], items: [
-      { id: uid(), name: n[1], color: COLORS[1] }, { id: uid(), name: n[2], color: COLORS[0] },
-      { id: uid(), name: n[3], color: COLORS[2] }, { id: uid(), name: n[4], color: COLORS[3] } ] },
-    { id: uid(), name: n[6], when: 'bed', time: '21:00', days: [], items: [
-      { id: uid(), name: n[7], color: COLORS[4] }, { id: uid(), name: n[8], color: COLORS[5] } ] }
-  ];
-}
+const newItem = (key, name, extra = {}) => ({ id: uid(), key: key || null, name: name || '', note: '', color: key ? CAT[key].color : C.white,
+  when: 'any', time: '08:00', days: [], group: null, ...extra });
+const sampleItems = () => [
+  newItem('bp', '', { when: 'time', time: '08:00', sample: true }),
+  newItem('vitd', '', { when: 'breakfast', sample: true }),
+  newItem('calcium', '', { when: 'breakfast', sample: true }),
+  newItem('fishoil', '', { sample: true }),
+  newItem('probiotic', '', { when: 'bed', sample: true })
+];
 
 let canSave = true, S = null;
 try { const raw = localStorage.getItem(KEY); if (raw) S = JSON.parse(raw); } catch (e) { canSave = false; }
+if (S && !S.items) {
+  // Upgrade from the first version, where every entry was a group.
+  if (S.sample) S = { lang: S.lang, items: sampleItems(), groups: [], log: {}, sample: true };
+  else {
+    const items = [], groups = [];
+    for (const g of S.groups || []) {
+      const base = { key: null, note: '', when: g.when, time: g.time, days: g.days };
+      if (g.items.length === 1) items.push({ ...base, id: g.items[0].id, name: g.items[0].name, color: g.items[0].color, group: null });
+      else {
+        groups.push({ id: g.id, name: g.name, when: g.when, time: g.time, days: g.days });
+        g.items.forEach(it => items.push({ ...base, id: it.id, name: it.name, color: it.color, group: g.id }));
+      }
+    }
+    S = { lang: S.lang, items, groups, log: S.log || {}, sample: false };
+  }
+}
 if (!S) {
   const nl = (navigator.language || '').toLowerCase();
   const lang = /^zh-(tw|hk|mo|hant)/.test(nl) ? 'zht' : nl.startsWith('en') ? 'en' : 'zhs';
-  S = { lang, groups: sample(lang), log: {}, sample: true };
+  S = { lang, items: sampleItems(), groups: [], log: {}, sample: true };
 }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { canSave = false; } }
 
-let tab = 'today', open = new Set(), draft = null, modalCb = null, toastTimer = null;
+let tab = 'today', view = 'list', draft = null, picked = new Set(), pickedCustom = [], query = '', modalCb = null, toastTimer = null;
 const t = (k, v = {}) => String(T[S.lang][k]).replace(/\{(\w+)\}/g, (_, x) => v[x] ?? '');
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 const dayKey = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 const fmtTime = ts => new Date(ts).toLocaleTimeString(LOC[S.lang], { hour: 'numeric', minute: '2-digit' });
 const fmtHM = hm => { const [h, m] = hm.split(':').map(Number); const d = new Date(); d.setHours(h, m, 0, 0); return fmtTime(d); };
 const mins = hm => { const [h, m] = hm.split(':').map(Number); return h * 60 + m; };
-const groupsOn = d => S.groups.filter(g => !g.days.length || g.days.includes(d.getDay()));
 const takenAt = (k, id) => (S.log[k] || {})[id];
-const whenLabel = g => g.when === 'time' ? t('at', { t: fmtHM(g.time) }) : t(g.when);
-const sortKey = g => g.when === 'time' ? mins(g.time) : ORDER[g.when];
+const itemName = i => i.key && CAT[i.key] ? CAT[i.key].n[S.lang] : (i.name || '?');
+const groupOf = i => i.group ? S.groups.find(g => g.id === i.group) : null;
+const timingOf = i => groupOf(i) || i;
+const onDay = (x, d) => !x.days.length || x.days.includes(d.getDay());
+const whenLabel = x => x.when === 'time' ? t('at', { t: fmtHM(x.time) }) : t(x.when);
+const daysLabel = x => x.days.length ? [...x.days].sort((a, b) => a - b).map(d => T[S.lang].wd[d]).join(' ') : t('every');
+const sortKey = x => x.when === 'time' ? mins(x.time) : ORDER[x.when];
 const pillDot = c => `<span class="pill" style="background:${esc(c)}"></span>`;
+const membersOf = g => S.items.filter(i => i.group === g.id);
+
+// What is due on a given day: groups (with their pills) and single pills.
+function entriesOn(d) {
+  const out = [];
+  for (const g of S.groups) { const items = membersOf(g); if (items.length && onDay(g, d)) out.push({ g, items, timing: g }); }
+  for (const i of S.items) if (!groupOf(i) && onDay(i, d)) out.push({ g: null, items: [i], timing: i });
+  return out;
+}
 
 function render() {
   document.documentElement.lang = LOC[S.lang];
   document.body.className = S.lang;
-  const app = document.getElementById('app');
   const now = new Date();
   const date = now.toLocaleDateString(LOC[S.lang], { month: 'long', day: 'numeric', weekday: 'long' });
   let html = `<div class="top"><div class="date">${esc(date)}</div><div class="langs" role="group">
@@ -223,52 +327,47 @@ function render() {
   if (!canSave) html += `<p class="note">${t('noSave')}</p>`;
   if (tab === 'today') html += renderToday(now);
   else if (tab === 'history') html += renderHistory(now);
-  else html += draft ? renderForm() : renderSetup();
-  app.innerHTML = html;
+  else html += view === 'pick' ? renderPicker() : view === 'item' ? renderItemForm() : view === 'group' ? renderGroupForm() : renderSetup();
+  document.getElementById('app').innerHTML = html;
   document.getElementById('tabs').innerHTML = ['today','history','setup'].map(k =>
     `<button data-a="tab" data-v="${k}" ${tab===k?'aria-current="page"':''}>${t(k)}</button>`).join('');
+  const bar = document.getElementById('pickbar');
+  bar.hidden = !(tab === 'setup' && view === 'pick');
+  if (!bar.hidden) renderPickBar();
+}
+
+function itemRow(i, k, nowMin, timing, showWhen) {
+  const ts = takenAt(k, i.id);
+  const due = !ts && timing.when === 'time' && nowMin >= mins(timing.time);
+  const sub = [showWhen ? whenLabel(timing) : '', i.note].filter(Boolean).join(' · ');
+  return `<div class="entry">${pillDot(i.color)}<div class="txt"><h2>${esc(itemName(i))}</h2>
+    ${sub ? `<div class="when">${esc(sub)}</div>` : ''}${due && showWhen ? `<span class="badge">${t('due')}</span>` : ''}</div>
+    ${ts ? `<div class="taken">✓ ${esc(fmtTime(ts))}<button class="link" data-a="undo" data-v="${i.id}">${t('undo')}</button></div>`
+         : `<button class="tick" data-a="take" data-v="${i.id}">${t('took')}</button>`}</div>`;
 }
 
 function renderToday(now) {
   const k = dayKey(now), nowMin = now.getHours() * 60 + now.getMinutes();
-  const gs = groupsOn(now).map(g => {
-    const done = g.items.filter(i => takenAt(k, i.id)).length;
-    return { g, done, full: done === g.items.length };
-  }).sort((a, b) => (a.full - b.full) || (sortKey(a.g) - sortKey(b.g)));
-  if (!gs.length) return `<div class="progress complete"><strong>${t('nothing')}</strong></div>`;
-  const fullCount = gs.filter(x => x.full).length;
-  let h = `<div class="progress ${fullCount===gs.length?'complete':''}"><strong>${fullCount===gs.length ? t('allDone') : t('progress',{a:fullCount,b:gs.length})}</strong>
-    <div class="bar">${gs.map(x => `<span class="${x.full?'on':''}"></span>`).join('')}</div></div>`;
+  const es = entriesOn(now).map(e => ({ ...e, done: e.items.filter(i => takenAt(k, i.id)).length }))
+    .map(e => ({ ...e, full: e.done === e.items.length }))
+    .sort((a, b) => (a.full - b.full) || (sortKey(a.timing) - sortKey(b.timing)));
+  if (!es.length) return `<div class="progress complete"><strong>${t('nothing')}</strong></div>`;
+  const all = es.flatMap(e => e.items), got = all.filter(i => takenAt(k, i.id)).length;
+  let h = `<div class="progress ${got===all.length?'complete':''}"><strong>${got===all.length ? t('allDone') : t('progress',{a:got,b:all.length})}</strong>
+    <div class="bar">${all.map(i => takenAt(k, i.id)).sort((a, b) => !!b - !!a).map(x => `<span class="${x?'on':''}"></span>`).join('')}</div></div>`;
   if (S.sample) h += `<p class="note">${t('sample')}</p>`;
-  for (const { g, done, full } of gs) {
-    const single = g.items.length === 1;
-    const isDue = !full && g.when === 'time' && nowMin >= mins(g.time);
-    const last = Math.max(0, ...g.items.map(i => takenAt(k, i.id) || 0));
-    const expanded = open.has(g.id) && !single;
-    let badge = '';
-    if (isDue) badge = `<span class="badge">${t('due')}</span>`;
-    else if (!full && done) badge = `<span class="badge">${t('partial',{a:done,b:g.items.length})}</span>`;
-    h += `<section class="card ${full?'done':''} ${isDue?'due':''}"><div class="card-head"><div>
-      <h2>${esc(g.name)}</h2><div class="when">${esc(whenLabel(g))}${single?'':' · '+g.items.length}</div></div>${badge}</div>
-      <div class="pills">${g.items.map(i => pillDot(i.color)).join('')}</div>`;
-    if (full) {
-      h += `<div class="done-line">${t('takenAt',{t:fmtTime(last)})}</div>`;
-      h += single ? `<button class="link" data-a="undo" data-v="${g.items[0].id}">${t('undo')}</button>`
-                  : `<button class="link" data-a="toggle" data-v="${g.id}">${expanded ? t('hide') : t('edit')}</button>`;
-    } else {
-      const left = g.items.length - done;
-      h += `<button class="big" data-a="takeAll" data-v="${g.id}">${single ? t('took') : t('tookAll',{n:left})}</button>`;
-      if (!single) h += `<button class="link" data-a="toggle" data-v="${g.id}">${expanded ? t('hide') : t('choose')}</button>`;
+  for (const e of es) {
+    if (!e.g) {
+      const due = !e.full && e.timing.when === 'time' && nowMin >= mins(e.timing.time);
+      h += `<section class="card ${e.full?'done':''} ${due?'due':''}">${itemRow(e.items[0], k, nowMin, e.timing, true)}</section>`;
+      continue;
     }
-    if (expanded) {
-      h += `<div class="items">${g.items.map(i => {
-        const ts = takenAt(k, i.id);
-        return `<div class="item">${pillDot(i.color)}<span class="name">${esc(i.name)}</span>${ts
-          ? `<span class="taken">✓ ${esc(fmtTime(ts))}<button class="link" data-a="undo" data-v="${i.id}">${t('undo')}</button></span>`
-          : `<button class="take" data-a="takeOne" data-v="${i.id}">${t('took')}</button>`}</div>`;
-      }).join('')}</div>`;
-    }
-    h += `</section>`;
+    const left = e.items.length - e.done;
+    const due = !e.full && e.timing.when === 'time' && nowMin >= mins(e.timing.time);
+    h += `<section class="card group ${e.full?'done':''} ${due?'due':''}"><div><h2>${esc(e.g.name)}</h2>
+      <div class="when">${esc(whenLabel(e.g))} · ${e.done}/${e.items.length}</div>${due ? `<span class="badge">${t('due')}</span>` : ''}</div>
+      <div class="group-items">${e.items.map(i => itemRow(i, k, nowMin, e.g, false)).join('')}</div>
+      ${left >= 2 ? `<button class="big" data-a="takeGroup" data-v="${e.g.id}">${t('tookAll',{n:left})}</button>` : ''}</section>`;
   }
   return h;
 }
@@ -277,15 +376,15 @@ function renderHistory(now) {
   let h = `<h1 class="sec">${t('last7')}</h1>`;
   for (let n = 0; n < 7; n++) {
     const d = new Date(now); d.setDate(d.getDate() - n);
-    const k = dayKey(d), gs = groupsOn(d);
-    const all = gs.flatMap(g => g.items), got = all.filter(i => takenAt(k, i.id)).length;
+    const k = dayKey(d), es = entriesOn(d).sort((a, b) => sortKey(a.timing) - sortKey(b.timing));
+    const all = es.flatMap(e => e.items), got = all.filter(i => takenAt(k, i.id)).length;
     const label = n === 0 ? t('today') : d.toLocaleDateString(LOC[S.lang], { month: 'short', day: 'numeric', weekday: 'short' });
     h += `<div class="day"><div class="day-head"><span>${esc(label)}</span><span>${got}/${all.length}${all.length && got===all.length?' ✅':''}</span></div>`;
-    for (const g of gs) {
-      if (g.items.length > 1) h += `<div class="row grp"><span>${esc(g.name)}</span></div>`;
-      for (const i of g.items) {
+    for (const e of es) {
+      if (e.g) h += `<div class="row grp"><span>${esc(e.g.name)}</span></div>`;
+      for (const i of e.items) {
         const ts = takenAt(k, i.id);
-        h += `<div class="row"><span>${esc(i.name)}</span>${ts ? `<span class="t">${esc(fmtTime(ts))}</span>` : `<span class="miss">${t('notTaken')}</span>`}</div>`;
+        h += `<div class="row"><span>${esc(itemName(i))}</span>${ts ? `<span class="t">${esc(fmtTime(ts))}</span>` : `<span class="miss">${t('notTaken')}</span>`}</div>`;
       }
     }
     h += `</div>`;
@@ -294,32 +393,93 @@ function renderHistory(now) {
 }
 
 function renderSetup() {
-  return `<h1 class="sec">${t('setup')}</h1><p class="note">${t('setupIntro')}</p><div class="setup-list">
-    ${[...S.groups].sort((a,b) => sortKey(a) - sortKey(b)).map(g => `<div class="setup-row"><div><strong>${esc(g.name)}</strong>
-      <div class="when">${esc(whenLabel(g))} · ${g.days.length ? [...g.days].sort((a, b) => a - b).map(d => T[S.lang].wd[d]).join(' ') : t('every')}</div>
-      <div class="pills">${g.items.map(i => pillDot(i.color)).join('')}</div></div>
-      <button class="btn" data-a="edit" data-v="${g.id}">${t('edit')}</button></div>`).join('')}
-  </div><button class="btn solid" data-a="add">${t('add')}</button>`;
+  const items = [...S.items].sort((a, b) => sortKey(timingOf(a)) - sortKey(timingOf(b)));
+  let h = `<h1 class="sec">${t('setup')}</h1><p class="hint">${t('setupIntro')}</p>`;
+  if (S.sample) h += `<div class="note">${t('sampleSetup')}<button class="btn small" data-a="clearSample">${t('clearSample')}</button></div>`;
+  h += `<h2 class="sub">${t('myMeds')}</h2><div class="setup-list">`;
+  if (!items.length) h += `<p class="hint">${t('emptyMine')}</p>`;
+  for (const i of items) {
+    const g = groupOf(i);
+    const sub = g ? t('inGroup', { n: g.name }) : `${whenLabel(i)} · ${daysLabel(i)}`;
+    h += `<div class="setup-row">${pillDot(i.color)}<div class="txt"><strong>${esc(itemName(i))}</strong>
+      <div class="when">${esc(sub)}${i.note ? ' · ' + esc(i.note) : ''}</div></div>
+      <button class="btn small" data-a="editItem" data-v="${i.id}">${t('edit')}</button></div>`;
+  }
+  h += `</div><button class="btn solid" data-a="pick">${t('addMeds')}</button>`;
+  h += `<h2 class="sub">${t('groupsTitle')}</h2><p class="hint">${t('groupsHint')}</p><div class="setup-list">`;
+  if (!S.groups.length) h += `<p class="hint">${t('noGroups')}</p>`;
+  for (const g of S.groups) {
+    h += `<div class="setup-row"><div class="txt"><strong>${esc(g.name)}</strong>
+      <div class="when">${esc(whenLabel(g))} · ${esc(daysLabel(g))}</div>
+      <div class="when">${membersOf(g).map(i => esc(itemName(i))).join('、') || '—'}</div></div>
+      <button class="btn small" data-a="editGroup" data-v="${g.id}">${t('edit')}</button></div>`;
+  }
+  return h + `</div><button class="btn" data-a="newGroup">${t('addGroup')}</button>`;
 }
 
-function renderForm() {
-  const d = draft;
-  return `<div class="form">
-    <div class="field"><label for="f-name">${t('fName')}</label><input type="text" id="f-name" data-f="name" value="${esc(d.name)}"></div>
-    <div class="field"><label for="f-when">${t('fWhen')}</label><select id="f-when" data-f="when">
+function renderPicker() {
+  return `<h1 class="sec">${t('pickTitle')}</h1>
+    <input type="search" class="search" id="q" placeholder="${t('search')}" value="${esc(query)}" aria-label="${t('search')}">
+    <div id="chips">${chipsHTML()}</div>
+    <div class="field"><label for="custom">${t('customLbl')}</label>
+      <div class="custom-row"><input type="text" id="custom" class="search"><button class="btn" data-a="addCustom">${t('customAdd')}</button></div></div>`;
+}
+function chipsHTML() {
+  const q = query.trim().toLowerCase();
+  const have = new Set(S.items.filter(i => !i.sample).map(i => i.key));
+  let h = '';
+  for (const type of ['supp', 'med']) {
+    const list = CATALOG[type].filter(([key]) => !q || Object.values(CAT[key].n).some(n => n.toLowerCase().includes(q)));
+    if (!list.length) continue;
+    h += `<h2 class="sub">${t(type)}</h2><div class="chips">${list.map(([key, color]) => have.has(key)
+      ? `<button class="chip" disabled>${pillDot(color)}${esc(CAT[key].n[S.lang])} ✓ ${t('have')}</button>`
+      : `<button class="chip" data-a="toggleChip" data-v="${key}" aria-pressed="${picked.has(key)}">${pillDot(color)}${esc(CAT[key].n[S.lang])}</button>`).join('')}</div>`;
+  }
+  if (pickedCustom.length) h += `<div class="chips" style="margin-top:12px">${pickedCustom.map((n, ix) =>
+    `<button class="chip" data-a="rmCustom" data-v="${ix}" aria-pressed="true">${pillDot(C.white)}${esc(n)} ×</button>`).join('')}</div>`;
+  return h;
+}
+function renderPickBar() {
+  const n = picked.size + pickedCustom.length;
+  document.getElementById('pickbar').innerHTML = `<div class="actions"><button class="btn" data-a="back">${t('cancel')}</button>
+    <button class="btn solid" data-a="confirmPick" ${n ? '' : 'disabled'}>${t('addN', { n })}</button></div>`;
+}
+
+function timingFields(d) {
+  return `<div class="field"><label for="f-when">${t('fWhen')}</label><select id="f-when" data-f="when">
       ${WHEN.map(w => `<option value="${w}" ${d.when===w?'selected':''}>${w==='time' ? t('fTime') : t(w)}</option>`).join('')}</select></div>
     ${d.when === 'time' ? `<div class="field"><label for="f-time">${t('fTime')}</label><input type="time" id="f-time" data-f="time" value="${esc(d.time)}"></div>` : ''}
     <div class="field"><span class="lbl">${t('fDays')}</span><div class="days">
       <button data-a="dayAll" aria-pressed="${!d.days.length}">${t('every')}</button>
-      ${T[S.lang].wd.map((w, i) => `<button data-a="day" data-v="${i}" aria-pressed="${d.days.includes(i)}">${w}</button>`).join('')}</div></div>
-    <div class="field"><span class="lbl">${t('fPills')}</span>
-      ${d.items.map((i, n) => `<div class="pill-edit"><div class="r"><input type="text" id="p-${i.id}" data-p="${n}" placeholder="${t('pillName')}" value="${esc(i.name)}" aria-label="${t('pillName')}">
-        <button class="x" data-a="rmPill" data-v="${n}" aria-label="${t('del')}">×</button></div>
-        <div class="swatches">${COLORS.map(c => `<button data-a="color" data-v="${n}" data-c="${c}" style="background:${c}" aria-pressed="${i.color===c}" aria-label="${c}"></button>`).join('')}</div></div>`).join('')}
-      <button class="btn" data-a="addPill">${t('addPill')}</button></div>
-    <div class="actions"><button class="btn" data-a="cancel">${t('cancel')}</button><button class="btn solid" data-a="save">${t('save')}</button></div>
-    ${S.groups.some(g => g.id === d.id) ? `<button class="btn danger" data-a="del">${t('del')}</button>` : ''}
-  </div>`;
+      ${T[S.lang].wd.map((w, i) => `<button data-a="day" data-v="${i}" aria-pressed="${d.days.includes(i)}">${w}</button>`).join('')}</div></div>`;
+}
+
+function renderItemForm() {
+  const d = draft, g = d.group ? S.groups.find(x => x.id === d.group) : null;
+  return `<div class="form">
+    ${d.key ? `<div class="form-title">${pillDot(d.color)}${esc(CAT[d.key].n[S.lang])}</div>`
+            : `<div class="field"><label for="f-name">${t('fName')}</label><input type="text" id="f-name" data-f="name" value="${esc(d.name)}"></div>`}
+    <div class="field"><label for="f-note">${t('fNote')}</label><input type="text" id="f-note" data-f="note" value="${esc(d.note)}" placeholder="${t('notePh')}"></div>
+    ${S.groups.length ? `<div class="field"><label for="f-group">${t('fGroup')}</label><select id="f-group" data-f="group">
+      <option value="">${t('noGroup')}</option>${S.groups.map(x => `<option value="${x.id}" ${d.group===x.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></div>` : ''}
+    ${g ? `<p class="hint">${esc(t('groupTiming', { n: g.name }))}</p>` : timingFields(d)}
+    <div class="field"><span class="lbl">${t('fColor')}</span><div class="swatches">${COLORS.map(c =>
+      `<button data-a="color" data-c="${c}" style="background:${c}" aria-pressed="${d.color===c}" aria-label="${c}"></button>`).join('')}</div></div>
+    <div class="actions"><button class="btn" data-a="back">${t('cancel')}</button><button class="btn solid" data-a="saveItem">${t('save')}</button></div>
+    <button class="btn danger" data-a="delItem">${t('del')}</button></div>`;
+}
+
+function renderGroupForm() {
+  const d = draft;
+  return `<div class="form">
+    <div class="field"><label for="f-name">${t('fName')}</label><input type="text" id="f-name" data-f="name" value="${esc(d.name)}" placeholder="${t('groupPh')}"></div>
+    ${timingFields(d)}
+    <div class="field"><span class="lbl">${t('fMembers')}</span><div class="checks">${S.items.map(i => {
+      const other = i.group && i.group !== d.id ? groupOf(i) : null;
+      return `<label>${''}<input type="checkbox" data-m="${i.id}" ${d.members.includes(i.id)?'checked':''}>${pillDot(i.color)}<span>${esc(itemName(i))}
+        ${other ? `<span class="other">（${esc(other.name)}）</span>` : ''}</span></label>`; }).join('')}</div></div>
+    <div class="actions"><button class="btn" data-a="back">${t('cancel')}</button><button class="btn solid" data-a="saveGroup">${t('save')}</button></div>
+    ${S.groups.some(g => g.id === d.id) ? `<button class="btn danger" data-a="delGroup">${t('del')}</button>` : ''}</div>`;
 }
 
 function ask(text, yes, cb) {
@@ -344,47 +504,83 @@ function log(ids) {
   ids.forEach(id => { if (!S.log[k][id]) S.log[k][id] = ts; });
   save(); render(); toast(t('recorded', { t: fmtTime(ts) }));
 }
-const findItem = id => { for (const g of S.groups) for (const i of g.items) if (i.id === id) return i; };
+function dropSamples() {
+  if (!S.sample) return;
+  S.items = S.items.filter(i => !i.sample); S.sample = false;
+}
+function goSetup() { view = 'list'; draft = null; render(); window.scrollTo(0, 0); }
 
 document.addEventListener('click', e => {
-  const b = e.target.closest('[data-a]'); if (!b) return;
+  const b = e.target.closest('[data-a]'); if (!b || b.disabled) return;
   const a = b.dataset.a, v = b.dataset.v, k = dayKey(new Date());
-  if (a === 'tab') { tab = v; draft = null; render(); window.scrollTo(0, 0); }
+  if (a === 'tab') { tab = v; view = 'list'; draft = null; render(); window.scrollTo(0, 0); }
   else if (a === 'lang') { S.lang = v; save(); render(); }
-  else if (a === 'takeAll') { const g = S.groups.find(x => x.id === v); log(g.items.filter(i => !takenAt(k, i.id)).map(i => i.id)); }
-  else if (a === 'takeOne') log([v]);
-  else if (a === 'toggle') { open.has(v) ? open.delete(v) : open.add(v); render(); }
-  else if (a === 'undo') ask(t('undoQ', { n: findItem(v).name }), t('yes'), () => { delete (S.log[k] || {})[v]; save(); render(); });
-  else if (a === 'edit') { draft = JSON.parse(JSON.stringify(S.groups.find(g => g.id === v))); render(); }
-  else if (a === 'add') { draft = { id: uid(), name: '', when: 'any', time: '08:00', days: [], items: [{ id: uid(), name: '', color: COLORS[0] }] }; render(); }
-  else if (a === 'cancel') { draft = null; render(); }
+  else if (a === 'take') log([v]);
+  else if (a === 'takeGroup') log(S.items.filter(i => i.group === v && !takenAt(k, i.id)).map(i => i.id));
+  else if (a === 'undo') { const i = S.items.find(x => x.id === v); ask(t('undoQ', { n: itemName(i) }), t('yes'), () => { delete (S.log[k] || {})[v]; save(); render(); }); }
+  else if (a === 'back') goSetup();
+  else if (a === 'clearSample') { dropSamples(); save(); render(); }
+  else if (a === 'pick') { view = 'pick'; picked = new Set(); pickedCustom = []; query = ''; render(); window.scrollTo(0, 0); }
+  else if (a === 'toggleChip') { picked.has(v) ? picked.delete(v) : picked.add(v); b.setAttribute('aria-pressed', picked.has(v)); renderPickBar(); }
+  else if (a === 'addCustom') {
+    const el = document.getElementById('custom'), n = el.value.trim();
+    if (!n) { toast(t('needName')); return; }
+    pickedCustom.push(n); el.value = ''; document.getElementById('chips').innerHTML = chipsHTML(); renderPickBar();
+  }
+  else if (a === 'rmCustom') { pickedCustom.splice(+v, 1); document.getElementById('chips').innerHTML = chipsHTML(); renderPickBar(); }
+  else if (a === 'confirmPick') {
+    dropSamples();
+    picked.forEach(key => S.items.push(newItem(key)));
+    pickedCustom.forEach(n => S.items.push(newItem(null, n)));
+    save(); toast(t('addN', { n: picked.size + pickedCustom.length }) + ' ✓'); goSetup();
+  }
+  else if (a === 'editItem') { draft = JSON.parse(JSON.stringify(S.items.find(i => i.id === v))); view = 'item'; render(); window.scrollTo(0, 0); }
+  else if (a === 'newGroup') { draft = { id: uid(), name: '', when: 'breakfast', time: '08:00', days: [], members: [] }; view = 'group'; render(); window.scrollTo(0, 0); }
+  else if (a === 'editGroup') { const g = S.groups.find(x => x.id === v); draft = { ...JSON.parse(JSON.stringify(g)), members: membersOf(g).map(i => i.id) }; view = 'group'; render(); window.scrollTo(0, 0); }
   else if (a === 'dayAll') { draft.days = []; render(); }
   else if (a === 'day') { const n = +v; draft.days = draft.days.includes(n) ? draft.days.filter(x => x !== n) : [...draft.days, n]; if (draft.days.length === 7) draft.days = []; render(); }
-  else if (a === 'color') { draft.items[+v].color = b.dataset.c; render(); }
-  else if (a === 'addPill') { draft.items.push({ id: uid(), name: '', color: COLORS[0] }); render(); document.getElementById('p-' + draft.items.at(-1).id).focus(); }
-  else if (a === 'rmPill') { draft.items.splice(+v, 1); render(); }
-  else if (a === 'save') {
-    draft.items = draft.items.filter(i => i.name.trim());
-    if (!draft.items.length && !draft.name.trim()) { toast(t('needName')); return; }
-    if (!draft.items.length) { toast(t('needName')); draft.items.push({ id: uid(), name: '', color: COLORS[0] }); render(); return; }
-    if (!draft.name.trim()) draft.name = draft.items.length === 1 ? draft.items[0].name : t('newName');
-    const ix = S.groups.findIndex(g => g.id === draft.id);
-    if (ix >= 0) S.groups[ix] = draft; else S.groups.push(draft);
-    S.sample = false; draft = null; save(); render();
+  else if (a === 'color') { draft.color = b.dataset.c; render(); }
+  else if (a === 'saveItem') {
+    if (!draft.key && !draft.name.trim()) { toast(t('needName')); return; }
+    delete draft.sample;
+    S.items = S.items.map(i => i.id === draft.id ? draft : i);
+    if (!S.items.some(i => i.sample)) S.sample = false;
+    save(); goSetup();
   }
-  else if (a === 'del') ask(t('delQ', { n: draft.name }), t('delYes'), () => { S.groups = S.groups.filter(g => g.id !== draft.id); S.sample = false; draft = null; save(); render(); });
+  else if (a === 'delItem') ask(t('delQ', { n: itemName(draft) }), t('delYes'), () => {
+    S.items = S.items.filter(i => i.id !== draft.id); if (!S.items.some(i => i.sample)) S.sample = false; save(); goSetup(); });
+  else if (a === 'saveGroup') {
+    if (!draft.name.trim()) { toast(t('needName')); return; }
+    const { members, ...g } = draft;
+    const ix = S.groups.findIndex(x => x.id === g.id);
+    if (ix >= 0) S.groups[ix] = g; else S.groups.push(g);
+    S.items.forEach(i => { if (members.includes(i.id)) i.group = g.id; else if (i.group === g.id) i.group = null; });
+    save(); goSetup();
+  }
+  else if (a === 'delGroup') ask(t('delQ', { n: draft.name }), t('delYes'), () => {
+    S.groups = S.groups.filter(g => g.id !== draft.id);
+    S.items.forEach(i => { if (i.group === draft.id) i.group = null; });
+    save(); goSetup(); });
 });
 document.addEventListener('input', e => {
-  if (!draft) return;
   const el = e.target;
-  if (el.dataset.f === 'name' || el.dataset.f === 'time') draft[el.dataset.f] = el.value;
-  else if (el.dataset.p !== undefined) draft.items[+el.dataset.p].name = el.value;
+  if (el.id === 'q') { query = el.value; document.getElementById('chips').innerHTML = chipsHTML(); return; }
+  if (!draft) return;
+  if (['name', 'note', 'time'].includes(el.dataset.f)) draft[el.dataset.f] = el.value;
 });
-document.addEventListener('change', e => { if (draft && e.target.dataset.f === 'when') { draft.when = e.target.value; render(); } });
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && !document.getElementById('modal').hidden) closeModal(); });
+document.addEventListener('change', e => {
+  const el = e.target; if (!draft) return;
+  if (el.dataset.f === 'when') { draft.when = el.value; render(); }
+  else if (el.dataset.f === 'group') { draft.group = el.value || null; render(); }
+  else if (el.dataset.m) { const id = el.dataset.m; draft.members = el.checked ? [...draft.members, id] : draft.members.filter(x => x !== id); }
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && !document.getElementById('modal').hidden) closeModal();
+  if (e.key === 'Enter' && e.target.id === 'custom') document.querySelector('[data-a="addCustom"]').click();
+});
 
 let lastDay = dayKey(new Date());
-setInterval(() => { if (draft) return; const d = dayKey(new Date()); if (d !== lastDay) { lastDay = d; open.clear(); } render(); }, 60000);
+setInterval(() => { if (tab === 'setup' && view !== 'list') return; const d = dayKey(new Date()); if (d !== lastDay) lastDay = d; render(); }, 60000);
 render();
 </script>
 </body>
