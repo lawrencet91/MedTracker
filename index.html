@@ -52,7 +52,6 @@ button { cursor: pointer; }
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
 .wrap { max-width: 560px; margin: 0 auto; padding-inline: 16px; padding-block: 16px calc(var(--tabs-h) + 56px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 14px; }
-.wrap.picking { padding-bottom: calc(var(--tabs-h) + 120px + env(safe-area-inset-bottom, 0px)); }
 
 .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
 .date { font-size: 28px; font-weight: 700; line-height: 1.2; text-wrap: balance; }
@@ -140,8 +139,6 @@ h2.sub { margin: 10px 0 0; font-size: 21px; }
 .chip:disabled { opacity: .55; cursor: default; }
 .custom-row { display: flex; gap: 8px; }
 .custom-row input { flex: 1; min-width: 0; }
-.pick-bar { position: fixed; left: 0; right: 0; bottom: calc(var(--tabs-h) + env(safe-area-inset-bottom, 0px)); background: var(--surface); border-top: 1px solid var(--line); padding: 10px 16px; display: flex; justify-content: center; z-index: 6; }
-.pick-bar .actions { width: 100%; max-width: 528px; }
 
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 10; }
 .sheet { background: var(--surface); border-radius: 20px; padding: 22px; max-width: 440px; width: 100%; display: flex; flex-direction: column; gap: 18px; font-size: 22px; }
@@ -152,7 +149,6 @@ p { margin: 0; }
 </head>
 <body>
 <div class="wrap" id="app"></div>
-<div class="pick-bar" id="pickbar" hidden></div>
 <nav class="tabs"><div id="tabs"></div></nav>
 <div class="modal" id="modal" hidden><div class="sheet" role="dialog" aria-modal="true"><p id="modal-text"></p><div class="actions"><button class="btn" id="modal-no"></button><button class="btn solid" id="modal-yes"></button></div></div></div>
 <div class="toast" id="toast" hidden></div>
@@ -226,7 +222,9 @@ const CATALOG = {
     ['folic', C.yellow, '叶酸', '葉酸', 'Folic acid'],
     ['collagen', C.white, '胶原蛋白', '膠原蛋白', 'Collagen'],
     ['lecithin', C.yellow, '卵磷脂', '卵磷脂', 'Lecithin'],
-    ['turmeric', C.yellow, '姜黄', '薑黃', 'Turmeric']
+    ['turmeric', C.yellow, '姜黄', '薑黃', 'Turmeric'],
+    ['liver', C.green, '护肝排毒', '護肝排毒', 'Liver detox'],
+    ['grapeseed', C.brown, '葡萄籽', '葡萄籽', 'Grape seed']
   ],
   med: [
     ['bp', C.white, '降血压药', '降血壓藥', 'Blood pressure'],
@@ -255,6 +253,7 @@ const LOC = { zhs:'zh-CN', zht:'zh-TW', en:'en-US' };
 const WHEN = ['any','breakfast','lunch','dinner','bed','time'];
 const ORDER = { breakfast:480, lunch:720, dinner:1080, bed:1320, any:1400 };
 const KEY = 'pillbox.v1';
+const VERSION = 'v4 · 2026-10-14';
 
 const uid = () => Math.random().toString(36).slice(2, 10);
 const newItem = (key, name, extra = {}) => ({ id: uid(), key: key || null, name: name || '', note: '', color: key ? CAT[key].color : C.white,
@@ -331,12 +330,9 @@ function render() {
   else html += view === 'pick' ? renderPicker() : view === 'item' ? renderItemForm() : view === 'group' ? renderGroupForm() : renderSetup();
   const app = document.getElementById('app');
   app.innerHTML = html;
-  app.classList.toggle('picking', tab === 'setup' && view === 'pick');
   document.getElementById('tabs').innerHTML = ['today','history','setup'].map(k =>
     `<button data-a="tab" data-v="${k}" ${tab===k?'aria-current="page"':''}>${t(k)}</button>`).join('');
-  const bar = document.getElementById('pickbar');
-  bar.hidden = !(tab === 'setup' && view === 'pick');
-  if (!bar.hidden) renderPickBar();
+  if (tab === 'setup' && view === 'pick') renderPickBar();
 }
 
 function itemRow(i, k, nowMin, timing, showWhen) {
@@ -417,13 +413,15 @@ function renderSetup() {
       <div class="when">${membersOf(g).map(i => esc(itemName(i))).join('、') || '—'}</div></div>
       <button class="btn small" data-a="editGroup" data-v="${g.id}">${t('edit')}</button></div>`;
   }
-  return h + `</div><button class="btn" data-a="newGroup">${t('addGroup')}</button>`;
+  return h + `</div><button class="btn" data-a="newGroup">${t('addGroup')}</button><p class="hint">${VERSION}</p>`;
 }
 
 function renderPicker() {
   return `<h1 class="sec">${t('pickTitle')}</h1>
+    <div class="pick-actions"></div>
     <input type="text" class="search" id="q" placeholder="${t('search')}" value="${esc(query)}" aria-label="${t('search')}" enterkeyhint="done" autocomplete="off">
-    <div id="chips">${chipsHTML()}</div>`;
+    <div id="chips">${chipsHTML()}</div>
+    <div class="pick-actions"></div>`;
 }
 function chipsHTML() {
   const q = query.trim().toLowerCase();
@@ -445,8 +443,8 @@ function chipsHTML() {
 }
 function renderPickBar() {
   const n = picked.size + pickedCustom.length;
-  document.getElementById('pickbar').innerHTML = `<div class="actions"><button class="btn" data-a="back">${t('cancel')}</button>
-    <button class="btn solid" data-a="confirmPick" ${n ? '' : 'disabled'}>${t('addN', { n })}</button></div>`;
+  document.querySelectorAll('.pick-actions').forEach(el => el.innerHTML = `<div class="actions"><button class="btn" data-a="back">${t('cancel')}</button>
+    <button class="btn solid" data-a="confirmPick" ${n ? '' : 'disabled'}>${t('addN', { n })}</button></div>`);
 }
 
 function timingFields(d) {
