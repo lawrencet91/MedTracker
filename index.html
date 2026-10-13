@@ -224,7 +224,8 @@ const CATALOG = {
     ['lecithin', C.yellow, '卵磷脂', '卵磷脂', 'Lecithin'],
     ['turmeric', C.yellow, '姜黄', '薑黃', 'Turmeric'],
     ['liver', C.green, '护肝排毒', '護肝排毒', 'Liver detox'],
-    ['grapeseed', C.brown, '葡萄籽', '葡萄籽', 'Grape seed']
+    ['grapeseed', C.brown, '葡萄籽', '葡萄籽', 'Grape seed'],
+    ['ginkgo', C.green, '银杏', '銀杏', 'Ginkgo biloba']
   ],
   med: [
     ['bp', C.white, '降血压药', '降血壓藥', 'Blood pressure'],
@@ -253,7 +254,7 @@ const LOC = { zhs:'zh-CN', zht:'zh-TW', en:'en-US' };
 const WHEN = ['any','breakfast','lunch','dinner','bed','time'];
 const ORDER = { breakfast:480, lunch:720, dinner:1080, bed:1320, any:1400 };
 const KEY = 'pillbox.v1';
-const VERSION = 'v4 · 2026-10-14';
+const VERSION = 'v5 · 2026-10-14';
 
 const uid = () => Math.random().toString(36).slice(2, 10);
 const newItem = (key, name, extra = {}) => ({ id: uid(), key: key || null, name: name || '', note: '', color: key ? CAT[key].color : C.white,
