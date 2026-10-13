@@ -52,6 +52,7 @@ button { cursor: pointer; }
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
 .wrap { max-width: 560px; margin: 0 auto; padding-inline: 16px; padding-block: 16px calc(var(--tabs-h) + 56px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 14px; }
+.wrap.picking { padding-bottom: calc(var(--tabs-h) + 120px + env(safe-area-inset-bottom, 0px)); }
 
 .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
 .date { font-size: 28px; font-weight: 700; line-height: 1.2; text-wrap: balance; }
@@ -166,8 +167,8 @@ const T = {
     myMeds:'我的药和保健品', addMeds:'＋ 添加药或保健品', edit:'修改', emptyMine:'还没有添加任何药。',
     groupsTitle:'组合（可选）', groupsHint:'把一起吃的药放在同一组，就可以一次全部打勾。', addGroup:'＋ 新建组合', noGroups:'还没有组合。',
     inGroup:'组合：{n}', clearSample:'清除示例', sampleSetup:'现在显示的是示例。添加第一项时，示例会自动清除。',
-    pickTitle:'选择要吃的药或保健品', search:'搜索…', supp:'保健品', med:'药物', have:'已添加',
-    customLbl:'找不到？自己输入', customAdd:'加入', addN:'添加 {n} 项',
+    pickTitle:'选择要吃的药或保健品', search:'搜索或输入药名…', supp:'保健品', med:'药物', have:'已添加',
+    customAdd:'＋ 添加「{n}」', addN:'添加 {n} 项',
     fWhen:'什么时候吃', fTime:'时间', fDays:'哪几天吃', every:'每天', fNote:'备注（可选）', notePh:'例如：半粒、5mg、饭后',
     fColor:'药丸颜色', fGroup:'组合', noGroup:'不分组', fName:'名称', fMembers:'这个组合里的药', groupPh:'例如：早餐一起吃',
     groupTiming:'时间跟随组合「{n}」', save:'保存', cancel:'取消', del:'删除', delQ:'删除「{n}」？', delYes:'删除',
@@ -180,8 +181,8 @@ const T = {
     myMeds:'我的藥和保健品', addMeds:'＋ 新增藥或保健品', edit:'修改', emptyMine:'還沒有新增任何藥。',
     groupsTitle:'組合（可選）', groupsHint:'把一起吃的藥放在同一組，就可以一次全部打勾。', addGroup:'＋ 新建組合', noGroups:'還沒有組合。',
     inGroup:'組合：{n}', clearSample:'清除示例', sampleSetup:'現在顯示的是示例。新增第一項時，示例會自動清除。',
-    pickTitle:'選擇要吃的藥或保健品', search:'搜尋…', supp:'保健品', med:'藥物', have:'已新增',
-    customLbl:'找不到？自己輸入', customAdd:'加入', addN:'新增 {n} 項',
+    pickTitle:'選擇要吃的藥或保健品', search:'搜尋或輸入藥名…', supp:'保健品', med:'藥物', have:'已新增',
+    customAdd:'＋ 新增「{n}」', addN:'新增 {n} 項',
     fWhen:'什麼時候吃', fTime:'時間', fDays:'哪幾天吃', every:'每天', fNote:'備註（可選）', notePh:'例如：半粒、5mg、飯後',
     fColor:'藥丸顏色', fGroup:'組合', noGroup:'不分組', fName:'名稱', fMembers:'這個組合裡的藥', groupPh:'例如：早餐一起吃',
     groupTiming:'時間跟隨組合「{n}」', save:'儲存', cancel:'取消', del:'刪除', delQ:'刪除「{n}」？', delYes:'刪除',
@@ -194,8 +195,8 @@ const T = {
     myMeds:'Medicines and supplements', addMeds:'+ Add medicine or supplement', edit:'Edit', emptyMine:'Nothing added yet.',
     groupsTitle:'Groups (optional)', groupsHint:'Put pills taken together in a group to tick them all at once.', addGroup:'+ New group', noGroups:'No groups yet.',
     inGroup:'Group: {n}', clearSample:'Clear examples', sampleSetup:'These are examples. They are removed when you add your first item.',
-    pickTitle:'Choose medicines or supplements', search:'Search…', supp:'Supplements', med:'Medicines', have:'Added',
-    customLbl:'Not listed? Type it in', customAdd:'Add', addN:'Add {n}',
+    pickTitle:'Choose medicines or supplements', search:'Search or type a name…', supp:'Supplements', med:'Medicines', have:'Added',
+    customAdd:'+ Add "{n}"', addN:'Add {n}',
     fWhen:'When to take', fTime:'Time', fDays:'Which days', every:'Every day', fNote:'Note (optional)', notePh:'e.g. half tablet, 5mg, after food',
     fColor:'Pill colour', fGroup:'Group', noGroup:'No group', fName:'Name', fMembers:'Pills in this group', groupPh:'e.g. Breakfast pills',
     groupTiming:'Timing follows the group "{n}"', save:'Save', cancel:'Cancel', del:'Delete', delQ:'Delete "{n}"?', delYes:'Delete',
@@ -328,7 +329,9 @@ function render() {
   if (tab === 'today') html += renderToday(now);
   else if (tab === 'history') html += renderHistory(now);
   else html += view === 'pick' ? renderPicker() : view === 'item' ? renderItemForm() : view === 'group' ? renderGroupForm() : renderSetup();
-  document.getElementById('app').innerHTML = html;
+  const app = document.getElementById('app');
+  app.innerHTML = html;
+  app.classList.toggle('picking', tab === 'setup' && view === 'pick');
   document.getElementById('tabs').innerHTML = ['today','history','setup'].map(k =>
     `<button data-a="tab" data-v="${k}" ${tab===k?'aria-current="page"':''}>${t(k)}</button>`).join('');
   const bar = document.getElementById('pickbar');
@@ -419,15 +422,18 @@ function renderSetup() {
 
 function renderPicker() {
   return `<h1 class="sec">${t('pickTitle')}</h1>
-    <input type="search" class="search" id="q" placeholder="${t('search')}" value="${esc(query)}" aria-label="${t('search')}">
-    <div id="chips">${chipsHTML()}</div>
-    <div class="field"><label for="custom">${t('customLbl')}</label>
-      <div class="custom-row"><input type="text" id="custom" class="search"><button class="btn" data-a="addCustom">${t('customAdd')}</button></div></div>`;
+    <input type="text" class="search" id="q" placeholder="${t('search')}" value="${esc(query)}" aria-label="${t('search')}" enterkeyhint="done" autocomplete="off">
+    <div id="chips">${chipsHTML()}</div>`;
 }
 function chipsHTML() {
   const q = query.trim().toLowerCase();
   const have = new Set(S.items.filter(i => !i.sample).map(i => i.key));
   let h = '';
+  if (pickedCustom.length) h += `<div class="chips">${pickedCustom.map((n, ix) =>
+    `<button class="chip" data-a="rmCustom" data-v="${ix}" aria-pressed="true">${pillDot(C.white)}${esc(n)} ×</button>`).join('')}</div>`;
+  const exact = Object.values(CAT).some(c => Object.values(c.n).some(n => n.toLowerCase() === q));
+  if (q && !exact && !pickedCustom.some(n => n.toLowerCase() === q))
+    h += `<button class="btn" data-a="addCustom">${esc(t('customAdd', { n: query.trim() }))}</button>`;
   for (const type of ['supp', 'med']) {
     const list = CATALOG[type].filter(([key]) => !q || Object.values(CAT[key].n).some(n => n.toLowerCase().includes(q)));
     if (!list.length) continue;
@@ -435,8 +441,6 @@ function chipsHTML() {
       ? `<button class="chip" disabled>${pillDot(color)}${esc(CAT[key].n[S.lang])} ✓ ${t('have')}</button>`
       : `<button class="chip" data-a="toggleChip" data-v="${key}" aria-pressed="${picked.has(key)}">${pillDot(color)}${esc(CAT[key].n[S.lang])}</button>`).join('')}</div>`;
   }
-  if (pickedCustom.length) h += `<div class="chips" style="margin-top:12px">${pickedCustom.map((n, ix) =>
-    `<button class="chip" data-a="rmCustom" data-v="${ix}" aria-pressed="true">${pillDot(C.white)}${esc(n)} ×</button>`).join('')}</div>`;
   return h;
 }
 function renderPickBar() {
@@ -523,9 +527,10 @@ document.addEventListener('click', e => {
   else if (a === 'pick') { view = 'pick'; picked = new Set(); pickedCustom = []; query = ''; render(); window.scrollTo(0, 0); }
   else if (a === 'toggleChip') { picked.has(v) ? picked.delete(v) : picked.add(v); b.setAttribute('aria-pressed', picked.has(v)); renderPickBar(); }
   else if (a === 'addCustom') {
-    const el = document.getElementById('custom'), n = el.value.trim();
+    const n = query.trim();
     if (!n) { toast(t('needName')); return; }
-    pickedCustom.push(n); el.value = ''; document.getElementById('chips').innerHTML = chipsHTML(); renderPickBar();
+    pickedCustom.push(n); query = ''; document.getElementById('q').value = '';
+    document.getElementById('chips').innerHTML = chipsHTML(); renderPickBar();
   }
   else if (a === 'rmCustom') { pickedCustom.splice(+v, 1); document.getElementById('chips').innerHTML = chipsHTML(); renderPickBar(); }
   else if (a === 'confirmPick') {
@@ -576,7 +581,7 @@ document.addEventListener('change', e => {
 });
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && !document.getElementById('modal').hidden) closeModal();
-  if (e.key === 'Enter' && e.target.id === 'custom') document.querySelector('[data-a="addCustom"]').click();
+  if (e.key === 'Enter' && e.target.id === 'q') { e.preventDefault(); const add = document.querySelector('[data-a="addCustom"]'); add ? add.click() : e.target.blur(); }
 });
 
 let lastDay = dayKey(new Date());
